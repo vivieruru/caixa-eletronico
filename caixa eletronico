@@ -1,0 +1,85 @@
+/******************************************************************/
+/* Aluno1: Vitoria Campos - Número de matrícula: 12345678         */
+/* Aluno2: Ruan Vaz - Número de matrícula: 12345678              */
+/* Exercício-Programa 1 — Caixa Eletrônico                       */
+/* Programação Avançada - 2024 - Professor: Bruno Perillo         */
+/* Compilador: gcc versão ...                                     */
+/******************************************************************/
+#include <stdio.h>
+
+int main() {
+    int cedulas[7];
+    int valores[] = {100, 50, 20, 10, 5, 2, 1};
+    int opcao, valor, i;
+
+    printf("Digite a quantidade inicial de cédulas (100, 50, 20, 10, 5, 2, 1):\n");
+    for (i = 0; i < 7; i++) {
+        scanf("%d", &cedulas[i]);
+        if (cedulas[i] < 0) {
+            printf("Erro: Quantidade de cédulas não pode ser negativa.\n");
+            return 1;
+        }
+    }
+
+    while (1) {
+        printf("\nOperação (0: Saque, 1: Depósito, -1: Encerrar): ");
+        scanf("%d", &opcao);
+
+        if (opcao == -1) {
+            printf("Encerrando operações...\n");
+            break;
+        } else if (opcao == 0) {
+            printf("Digite o valor a sacar: ");
+            scanf("%d", &valor);
+
+            if (valor <= 0) {
+                printf("Erro: Valor inválido para saque.\n");
+                continue;
+            }
+
+            int valor_restante = valor;
+            int cedulas_temp[7];
+            for (i = 0; i < 7; i++) {
+                cedulas_temp[i] = cedulas[i];
+            }
+
+            for (i = 0; i < 7; i++) {
+                while (valor_restante >= valores[i] && cedulas_temp[i] > 0) {
+                    valor_restante -= valores[i];
+                    cedulas_temp[i]--;
+                }
+            }
+
+            if (valor_restante == 0) {
+                printf("Saque de R$%d realizado com sucesso.\n", valor);
+                for (i = 0; i < 7; i++) {
+                    cedulas[i] = cedulas_temp[i];
+                }
+            } else {
+                printf("Saque de R$%d não realizado. Falta de cédulas.\n", valor);
+            }
+        } else if (opcao == 1) {
+            printf("Digite a quantidade de cédulas a depositar (100, 50, 20, 10, 5, 2, 1):\n");
+            for (i = 0; i < 7; i++) {
+                int deposito;
+                scanf("%d", &deposito);
+                if (deposito < 0) {
+                    printf("Erro: Não é permitido depositar valores negativos.\n");
+                    deposito = 0;
+                }
+                cedulas[i] += deposito;
+            }
+            printf("Depósito realizado com sucesso.\n");
+        } else {
+            printf("Operação inválida.\n");
+        }
+
+        printf("Estado atual das cédulas (100, 50, 20, 10, 5, 2, 1): ");
+        for (i = 0; i < 7; i++) {
+            printf("%d ", cedulas[i]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
